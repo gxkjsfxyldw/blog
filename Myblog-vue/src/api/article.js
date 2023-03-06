@@ -1,6 +1,6 @@
 //引入映射后端的url
 import request from '@/request'
-//文章请求接口
+//文章请求接口 test
 export function getArticle(query,params){
     return request({//这里就可以直接调用request工具类
         method:'post',
