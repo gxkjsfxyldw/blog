@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ldw.blog.dao.mapper.TagMapper">
+
+<!--       List<Tag>findTagsByArticleById(Long articleId);-->
+    <select id="findTagsByArticleById" parameterType="long" resultType="com.ldw.blog.dao.pojo.Tag">
+            select id,avatar,tag_name as tagName from ms_tag
+            where id in
+            (select tag_id from ms_article_tag where article_id=#{articleId})
+    </select>
+
+<!--    查询最热标签   List<Long> findHotTagIds(int limit);-->
+    <select id="findHotTagIds" parameterType="int" resultType="java.lang.Long">
+        SELECT  tag_id FROM `ms_article_tag` group by tag_id order by count(*) desc limit #{limit}
+    </select>
+<!--      List<Tag> findTagByTagIds(List<Long> tagIds);  注意tagIds 参数名也要一致-->
+    <select id="findTagByTagIds" parameterType="list" resultType="com.ldw.blog.dao.pojo.Tag">
+        select id,tag_name as tagName from ms_tag
+        where id in
+        <foreach collection="tagIds" item="tagId" separator="," open="(" close=")">
+            #{tagId}
+        </foreach>
+    </select>
+
+
+</mapper>

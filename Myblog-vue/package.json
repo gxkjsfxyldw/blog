@@ -1,0 +1,26 @@
+{
+  "name": "default",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "core-js": "^2.6.5",
+    "element-ui": "^2.15.9",
+    "load": "^1.0.2",
+    "lodash": "^4.17.21",
+    "mavon-editor": "^2.10.4",
+    "vue": "^2.6.10",
+    "vue-axios": "^3.4.1",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.8.0",
+    "@vue/cli-service": "^3.8.0",
+    "vue-template-compiler": "^2.6.10"
+  }
+}

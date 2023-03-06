@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ldw.blog.dao.mapper.ArticleMapper">
+    <!--    注意这里的返回是映射的是虚拟字段 -->
+    <!-- 使用这个字段失效了 select year(create_date) as year,month (create_date) as month ,count(*)as count
+           from ms_article
+           group by year,month-->
+    <select id="listArchives" resultType="com.ldw.blog.dao.dos.Archives">
+        select year(FROM_UNIXTIME(create_date/1000)) year,month(FROM_UNIXTIME(create_date/1000)) month, count(*) count
+        from ms_article
+        group by year,month;
+    </select>
+
+    <!--    结果集映射  将数据库里的字段和pojo里面的属性相互映射-->
+    <resultMap id="articleMap" type="com.ldw.blog.dao.pojo.Article">
+        <id column="id" property="id" />
+        <result column="author_id" property="authorId"/>
+        <result column="comment_counts" property="commentCounts"/>
+        <result column="create_date" property="createDate"/>
+        <result column="summary" property="summary"/>
+        <result column="title" property="title"/>
+        <result column="view_counts" property="viewCounts"/>
+        <result column="weight" property="weight"/>
+        <result column="body_id" property="bodyId"/>
+        <result column="category_id" property="categoryId"/>
+    </resultMap>
+
+    <!--               Long categoryId,
+                       Long tagId,
+                       String year,
+                       String month);
+                       表示用于文章归档时使用，因为文章归档将会传会日期，这时就要按照日期格式来查询数据
+                       -->
+
+    <select id="listArticle" resultMap="articleMap">
+        select * from ms_article
+
+        <where>
+            1=1
+            <if test="categoryId!=null">
+                and category_id=#{categoryId}
+            </if>
+            <if test="tagId!=null">
+                and id in(select article_id from ms_article_tag where tag_id=#{tagId})
+            </if>
+            <if test="year != null and year.length>0 and month != null and month.length>0">
+                and ( FROM_UNIXTIME(create_date/1000,'%Y') = #{year}
+                and FROM_UNIXTIME(create_date/1000,'%m') = #{month} )
+            </if>
+            order by weight,create_date desc
+        </where>
+    </select>
+
+</mapper>
